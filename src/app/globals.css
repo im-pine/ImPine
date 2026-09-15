@@ -81,3 +81,14 @@ body {
   color: var(--foreground);
   font-family: var(--font-sans);
 }
+
+@keyframes ripple-expand {
+  from {
+    transform: scale(0.3);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}

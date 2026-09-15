@@ -10,6 +10,22 @@ export function About() {
       title="About Me"
       className="bg-primary-100"
     >
+      <div className="relative mx-auto mb-16 max-w-3xl px-10 py-8 text-center bg-primary-50">
+        <span className="absolute top-0 left-0 h-10 w-10 border-t-2 border-l-2 border-secondary-500" />
+        <span className="absolute right-0 bottom-0 h-10 w-10 border-r-2 border-b-2 border-secondary-500" />
+
+        <p className="text-lg font-semibold text-primary-900">
+          {profile.bio.lead}
+        </p>
+        <div className="mt-4 space-y-4">
+          {profile.bio.paragraphs.map((paragraph, i) => (
+            <p key={i} className="text-md leading-relaxed text-primary-700">
+              {paragraph}
+            </p>
+          ))}
+        </div>
+      </div>
+
       <div className="grid grid-cols-1 gap-10 sm:grid-cols-3">
         <div>
           <h3 className="mb-4 text-xs font-semibold tracking-[0.2em] text-primary-500 uppercase">

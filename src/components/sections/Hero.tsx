@@ -14,11 +14,16 @@ export function Hero() {
       className="relative flex min-h-screen scroll-mt-20 items-center justify-center overflow-hidden bg-primary-900 pt-20"
     >
       <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
-        {RINGS.map((ring) => (
+        {RINGS.map((ring, index) => (
           <span
             key={ring.size}
-            className={`absolute rounded-full border ${ring.opacity}`}
-            style={{ width: ring.size, height: ring.size }}
+            className={`absolute rounded-full border opacity-0 ${ring.opacity}`}
+            style={{
+              width: ring.size,
+              height: ring.size,
+              animation: "ripple-expand 1.1s ease-out forwards",
+              animationDelay: `${index * 200}ms`,
+            }}
           />
         ))}
       </div>
