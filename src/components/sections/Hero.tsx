@@ -17,7 +17,7 @@ export function Hero() {
         {RINGS.map((ring, index) => (
           <span
             key={ring.size}
-            className={`absolute rounded-full border opacity-0 ${ring.opacity}`}
+            className={`absolute rounded-full border border-primary-700 opacity-0 ${ring.opacity}`}
             style={{
               width: ring.size,
               height: ring.size,

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { skillGroups } from "@/data/skillGroups";
 import { TechIcon } from "@/components/ui/TechIcon";
+import { ShowMoreToggle } from "@/components/ui/ShowMoreToggle";
 
 const VISIBLE_COUNT = 5;
 
@@ -99,15 +100,12 @@ export function Skills() {
             )}
 
             {hasMore && (
-              <button
-                type="button"
-                onClick={() => setExpanded((prev) => !prev)}
-                className="mt-8 flex w-full items-center gap-4 text-sm font-medium text-primary-300 transition-colors hover:text-white"
-              >
-                <span className="h-px flex-1 bg-primary-600" />
-                <span>{expanded ? "Show Less" : "Load More"}</span>
-                <span className="h-px flex-1 bg-primary-600" />
-              </button>
+              <ShowMoreToggle
+                expanded={expanded}
+                onToggle={() => setExpanded((prev) => !prev)}
+                variant="dark"
+                className="mt-8"
+              />
             )}
           </div>
         </div>
