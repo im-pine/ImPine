@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find /private/tmp/claude-501 -iname \"*.jpg\" -o -iname \"*.jpeg\" -o -iname \"*.png\" 2>/dev/null | grep -v node_modules | head -50)",
+      "Read(//private/tmp/claude-501/**)",
+      "Bash(find /tmp /var/folders -maxdepth 6 \\\\\\( -iname \"*.jpg\" -o -iname \"*.jpeg\" -o -iname \"*.png\" \\\\\\) -mmin -120 2>/dev/null | grep -vi node_modules | head -50)",
+      "Read(//private/tmp/**)",
+      "Bash(find /private/tmp/claude-501/-Users-pine-Documents-ImPine -maxdepth 4 2>/dev/null; echo \"---\"; find \"$HOME/Library/Application Support\" -iname \"*claude*\" -maxdepth 3 2>/dev/null | head -20)",
+      "Read(//Users/pine/Library/Application Support/**)",
+      "Bash(npm run *)",
+      "Bash(curl -sf http://localhost:3000)",
+      "Bash(break)",
+      "Bash(grep -oE \"Si\\(Javascript|Typescript|Php|React$|Nextdotjs|Tailwindcss|Mantine|Redux|Recoil|Swr|Zod|Laravel|Mysql|Docker|Jenkins|Git$|Figma|Jira|Notion|Slack|Cursor|Googleanalytics|Naver\\)\\\\b\" node_modules/react-icons/si/index.d.ts)",
+      "Bash(npx --yes playwright screenshot --browser=chromium --viewport-size=1440,900 --wait-for-timeout=1200 'http://localhost:3000/#skills' /private/tmp/claude-501/-Users-pine-Documents-ImPine/c154a6e3-76de-429e-92d9-a3bcef92ee37/scratchpad/skills-tabs.png)",
+      "Bash(node /private/tmp/claude-501/-Users-pine-Documents-ImPine/c154a6e3-76de-429e-92d9-a3bcef92ee37/scratchpad/pw2/verify_skills.mjs /private/tmp/claude-501/-Users-pine-Documents-ImPine/c154a6e3-76de-429e-92d9-a3bcef92ee37/scratchpad/skills-lang-minheight.png /private/tmp/claude-501/-Users-pine-Documents-ImPine/c154a6e3-76de-429e-92d9-a3bcef92ee37/scratchpad/skills-frontend-loadmore.png /private/tmp/claude-501/-Users-pine-Documents-ImPine/c154a6e3-76de-429e-92d9-a3bcef92ee37/scratchpad/skills-frontend-showless.png)",
+      "Bash(lsof -ti:3000 -sTCP:LISTEN)",
+      "Bash(xargs -r kill)"
+    ]
+  }
+}
