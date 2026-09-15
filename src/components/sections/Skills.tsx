@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { skillGroups } from "@/data/skillGroups";
 import { TechIcon } from "@/components/ui/TechIcon";
 import { ShowMoreToggle } from "@/components/ui/ShowMoreToggle";
@@ -10,6 +10,27 @@ const VISIBLE_COUNT = 5;
 export function Skills() {
   const [activeLabel, setActiveLabel] = useState(skillGroups[0].label);
   const [expanded, setExpanded] = useState(false);
+  const tabScrollRef = useRef<HTMLDivElement>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(false);
+
+  useEffect(() => {
+    const el = tabScrollRef.current;
+    if (!el) return;
+
+    const updateScrollState = () => {
+      setCanScrollLeft(el.scrollLeft > 4);
+      setCanScrollRight(el.scrollLeft + el.clientWidth < el.scrollWidth - 4);
+    };
+
+    updateScrollState();
+    el.addEventListener("scroll", updateScrollState, { passive: true });
+    window.addEventListener("resize", updateScrollState);
+    return () => {
+      el.removeEventListener("scroll", updateScrollState);
+      window.removeEventListener("resize", updateScrollState);
+    };
+  }, []);
 
   const activeGroup =
     skillGroups.find((group) => group.label === activeLabel) ?? skillGroups[0];
@@ -31,27 +52,44 @@ export function Skills() {
         </div>
 
         <div className="flex flex-col gap-8 sm:flex-row sm:gap-12">
-          <div className="flex shrink-0 gap-1 overflow-x-auto sm:w-40 sm:flex-col sm:gap-2 sm:overflow-visible">
-            {skillGroups.map((group) => {
-              const isActive = group.label === activeLabel;
-              return (
-                <button
-                  key={group.label}
-                  type="button"
-                  onClick={() => {
-                    setActiveLabel(group.label);
-                    setExpanded(false);
-                  }}
-                  className={`shrink-0 border-l-2 px-4 py-2 text-left text-sm font-medium whitespace-nowrap transition-colors sm:whitespace-normal ${
-                    isActive
-                      ? "border-primary-300 text-primary-100"
-                      : "border-transparent text-primary-500 hover:text-primary-300"
-                  }`}
-                >
-                  {group.label}
-                </button>
-              );
-            })}
+          <div className="relative -mx-6 sm:mx-0">
+            {canScrollLeft && (
+              <span className="pointer-events-none absolute top-0 bottom-0 left-0 z-10 flex items-center sm:hidden">
+                <span className="block h-0 w-0 border-y-[7px] border-r-[9px] border-y-transparent border-r-primary-300" />
+              </span>
+            )}
+
+            <div
+              ref={tabScrollRef}
+              className="scrollbar-hidden mx-5 flex gap-2 overflow-x-auto sm:mx-0 sm:w-40 sm:flex-col sm:gap-2 sm:overflow-visible"
+            >
+              {skillGroups.map((group) => {
+                const isActive = group.label === activeLabel;
+                return (
+                  <button
+                    key={group.label}
+                    type="button"
+                    onClick={() => {
+                      setActiveLabel(group.label);
+                      setExpanded(false);
+                    }}
+                    className={`shrink-0 rounded-full px-4 py-2 text-left text-sm font-medium whitespace-nowrap transition-colors sm:rounded-none sm:border-l-2 sm:whitespace-normal ${
+                      isActive
+                        ? "bg-primary-100/10 text-primary-100 sm:bg-transparent sm:border-primary-300"
+                        : "text-primary-500 hover:text-primary-300 sm:border-transparent"
+                    }`}
+                  >
+                    {group.label}
+                  </button>
+                );
+              })}
+            </div>
+
+            {canScrollRight && (
+              <span className="pointer-events-none absolute top-0 right-0 bottom-0 z-10 flex items-center sm:hidden">
+                <span className="block h-0 w-0 border-y-[7px] border-l-[9px] border-y-transparent border-l-primary-300" />
+              </span>
+            )}
           </div>
 
           <div className="min-h-[583px] min-w-0 flex-1">
@@ -74,7 +112,7 @@ export function Skills() {
                       {skill.notes.map((note, i) => (
                         <li
                           key={i}
-                          className="flex gap-2 text-sm leading-relaxed text-primary-300"
+                          className="flex gap-2 text-card-body leading-relaxed text-primary-300 sm:text-sm"
                         >
                           <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-primary-500" />
                           <span>{note}</span>

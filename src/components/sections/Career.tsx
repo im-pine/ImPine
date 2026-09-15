@@ -31,7 +31,7 @@ export function Career() {
                   {entry.achievements.map((achievement, index) => (
                     <li
                       key={index}
-                      className="flex gap-2 text-sm leading-relaxed text-primary-700"
+                      className="flex gap-2 text-card-body leading-relaxed text-primary-700 sm:text-sm"
                     >
                       <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-primary-400" />
                       <span>{achievement}</span>

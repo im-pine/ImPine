@@ -70,6 +70,8 @@
     sans-serif;
   --font-mono: var(--font-geist-mono);
   --font-serif: var(--font-serif-kr), serif;
+
+  --text-card-body: 0.9375rem;
 }
 
 html {
@@ -80,6 +82,17 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans);
+}
+
+/* Hides the persistent desktop-style scrollbar; touch devices still show
+   their native transient scroll indicator only while actively scrolling. */
+.scrollbar-hidden {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.scrollbar-hidden::-webkit-scrollbar {
+  display: none;
 }
 
 @keyframes ripple-expand {

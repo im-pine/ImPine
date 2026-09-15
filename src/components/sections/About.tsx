@@ -110,7 +110,7 @@ export function About() {
                     {activity.notes.map((line, i) => (
                       <li
                         key={i}
-                        className="text-sm leading-snug text-primary-900/80"
+                        className="text-card-body leading-snug text-primary-900/80 sm:text-sm"
                       >
                         {line}
                       </li>

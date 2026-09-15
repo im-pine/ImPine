@@ -54,7 +54,7 @@ export function Hero() {
           {profile.tagline}
         </p>
 
-        <span className="mt-8 h-px w-10 bg-secondary-500" />
+        {/* <span className="mt-8 h-px w-10 bg-secondary-500" /> */}
 
         {/* <div className="mt-8 flex gap-4">
           <a

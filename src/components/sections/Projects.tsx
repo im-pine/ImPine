@@ -74,7 +74,7 @@ export function Projects() {
                   {project.achievements.map((achievement, i) => (
                     <p
                       key={i}
-                      className="text-sm leading-relaxed text-primary-700"
+                      className="text-card-body leading-relaxed text-primary-700 sm:text-sm"
                     >
                       {achievement}
                     </p>
@@ -105,7 +105,7 @@ export function Projects() {
                       </span>
                     )}
                   </div>
-                  <p className="mt-1 text-sm text-primary-700">
+                  <p className="text-card-body mt-1 text-primary-700 sm:text-sm">
                     {project.summary}
                   </p>
                 </div>
