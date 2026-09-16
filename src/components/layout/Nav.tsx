@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 
+const HERO_ID = "hi";
+
 const NAV_ITEMS = [
   { id: "about", label: "About" },
   { id: "career", label: "Career" },
@@ -11,13 +13,18 @@ const NAV_ITEMS = [
 ];
 
 export function Nav() {
-  const [activeId, setActiveId] = useState<string>(NAV_ITEMS[0].id);
+  const [activeId, setActiveId] = useState<string>(HERO_ID);
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
-    const sections = NAV_ITEMS.map((item) =>
-      document.getElementById(item.id),
-    ).filter((el): el is HTMLElement => el !== null);
+    // Hero isn't a nav item, but it still needs to be observed alongside the
+    // real nav sections — otherwise nothing intersects while it's on screen,
+    // `setActiveId` never fires, and the initial `activeId` (whatever it
+    // defaulted to) stays stuck as "active" the whole time the user is on
+    // Hero.
+    const sections = [HERO_ID, ...NAV_ITEMS.map((item) => item.id)]
+      .map((id) => document.getElementById(id))
+      .filter((el): el is HTMLElement => el !== null);
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -47,7 +54,11 @@ export function Nav() {
     <>
       <header className="fixed inset-x-0 top-0 z-50 border-b border-primary-800 bg-primary-900/90 backdrop-blur">
         <nav className="mx-auto flex max-w-5xl items-center justify-between gap-4 px-6 py-4">
-          <a href="#hero" className="shrink-0">
+          <a
+            href={`#${HERO_ID}`}
+            onClick={() => setMenuOpen(false)}
+            className="shrink-0"
+          >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/logo.svg" alt="Im.Pine :)" className="h-5 w-auto" />
           </a>
@@ -57,7 +68,7 @@ export function Nav() {
               <li key={item.id}>
                 <a
                   href={`#${item.id}`}
-                  className={`inline-block whitespace-nowrap rounded-full px-3 py-1.5 text-sm font-medium transition-colors ${
+                  className={`inline-block whitespace-nowrap rounded-full px-4 py-2 text-sm font-medium transition-colors ${
                     activeId === item.id
                       ? "bg-primary-100/10 text-primary-100"
                       : "text-primary-400 hover:text-primary-100"
@@ -114,7 +125,7 @@ export function Nav() {
               <a
                 href={`#${item.id}`}
                 onClick={() => setMenuOpen(false)}
-                className={`block rounded-full px-4 py-2.5 text-sm font-medium transition-colors ${
+                className={`block rounded-full px-4 py-3 text-sm font-medium transition-colors ${
                   activeId === item.id
                     ? "bg-primary-100/10 text-primary-100"
                     : "text-primary-400 hover:text-primary-100"

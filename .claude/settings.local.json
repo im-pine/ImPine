@@ -1,6 +1,14 @@
 {
   "permissions": {
     "allow": [
+      "Bash(node:*)",
+      "Bash(npm:*)",
+      "Bash(npx:*)",
+      "Bash(cp:*)",
+      "Bash(cd:*)",
+      "Bash(lsof:*)",
+      "Bash(grep:*)",
+      "Bash(find:*)",
       "Bash(find /private/tmp/claude-501 -iname \"*.jpg\" -o -iname \"*.jpeg\" -o -iname \"*.png\" 2>/dev/null | grep -v node_modules | head -50)",
       "Read(//private/tmp/claude-501/**)",
       "Bash(find /tmp /var/folders -maxdepth 6 \\\\\\( -iname \"*.jpg\" -o -iname \"*.jpeg\" -o -iname \"*.png\" \\\\\\) -mmin -120 2>/dev/null | grep -vi node_modules | head -50)",
@@ -14,7 +22,18 @@
       "Bash(npx --yes playwright screenshot --browser=chromium --viewport-size=1440,900 --wait-for-timeout=1200 'http://localhost:3000/#skills' /private/tmp/claude-501/-Users-pine-Documents-ImPine/c154a6e3-76de-429e-92d9-a3bcef92ee37/scratchpad/skills-tabs.png)",
       "Bash(node /private/tmp/claude-501/-Users-pine-Documents-ImPine/c154a6e3-76de-429e-92d9-a3bcef92ee37/scratchpad/pw2/verify_skills.mjs /private/tmp/claude-501/-Users-pine-Documents-ImPine/c154a6e3-76de-429e-92d9-a3bcef92ee37/scratchpad/skills-lang-minheight.png /private/tmp/claude-501/-Users-pine-Documents-ImPine/c154a6e3-76de-429e-92d9-a3bcef92ee37/scratchpad/skills-frontend-loadmore.png /private/tmp/claude-501/-Users-pine-Documents-ImPine/c154a6e3-76de-429e-92d9-a3bcef92ee37/scratchpad/skills-frontend-showless.png)",
       "Bash(lsof -ti:3000 -sTCP:LISTEN)",
-      "Bash(xargs -r kill)"
+      "Bash(xargs -r kill)",
+      "Bash(pkill -f \"next dev\")",
+      "Bash(pkill -f \"next-server\")",
+      "Bash(lsof -ti:3000)",
+      "Read(//Users/pine/Library/Caches/ms-playwright/**)",
+      "Read(//Users/pine/.cache/**)",
+      "Bash(find ~/.npm/_npx -maxdepth 3 -iname \"playwright\" -type d 2>/dev/null)",
+      "Read(//Users/pine/.npm/_npx/**)",
+      "Bash(lsof -ti:3000 -sTCP:LISTEN | xargs -r kill; rm -f /Users/pine/.npm/_npx/e41f203b7505f1fb/verify*.mjs; echo done)"
+    ],
+    "additionalDirectories": [
+      "/Users/pine/.npm/_npx/e41f203b7505f1fb"
     ]
   }
 }

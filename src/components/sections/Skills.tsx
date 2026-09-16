@@ -1,9 +1,15 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { motion } from "motion/react";
 import { skillGroups } from "@/data/skillGroups";
 import { TechIcon } from "@/components/ui/TechIcon";
 import { ShowMoreToggle } from "@/components/ui/ShowMoreToggle";
+import {
+  StaggeredReveal,
+  staggerContainer,
+  staggerItem,
+} from "@/components/ui/StaggeredReveal";
 
 const VISIBLE_COUNT = 5;
 
@@ -32,6 +38,12 @@ export function Skills() {
     };
   }, []);
 
+  const scrollTabs = (direction: 1 | -1) => {
+    const el = tabScrollRef.current;
+    if (!el) return;
+    el.scrollBy({ left: direction * el.clientWidth * 0.8, behavior: "smooth" });
+  };
+
   const activeGroup =
     skillGroups.find((group) => group.label === activeLabel) ?? skillGroups[0];
   const primarySkills = activeGroup.skills.slice(0, VISIBLE_COUNT);
@@ -54,9 +66,14 @@ export function Skills() {
         <div className="flex flex-col gap-8 sm:flex-row sm:gap-12">
           <div className="relative -mx-6 sm:mx-0">
             {canScrollLeft && (
-              <span className="pointer-events-none absolute top-0 bottom-0 left-0 z-10 flex items-center sm:hidden">
+              <button
+                type="button"
+                aria-label="이전 탭 보기"
+                onClick={() => scrollTabs(-1)}
+                className="absolute top-0 bottom-0 left-0 z-10 flex items-center px-2 sm:hidden"
+              >
                 <span className="block h-0 w-0 border-y-[7px] border-r-[9px] border-y-transparent border-r-primary-300" />
-              </span>
+              </button>
             )}
 
             <div
@@ -86,9 +103,14 @@ export function Skills() {
             </div>
 
             {canScrollRight && (
-              <span className="pointer-events-none absolute top-0 right-0 bottom-0 z-10 flex items-center sm:hidden">
+              <button
+                type="button"
+                aria-label="다음 탭 보기"
+                onClick={() => scrollTabs(1)}
+                className="absolute top-0 right-0 bottom-0 z-10 flex items-center px-2 sm:hidden"
+              >
                 <span className="block h-0 w-0 border-y-[7px] border-l-[9px] border-y-transparent border-l-primary-300" />
-              </span>
+              </button>
             )}
           </div>
 
@@ -98,9 +120,19 @@ export function Skills() {
               <span className="text-secondary-400">@ {activeGroup.label}</span>
             </p>
 
-            <div className="space-y-8">
+            <motion.div
+              key={activeGroup.label}
+              variants={staggerContainer}
+              initial="hidden"
+              animate="visible"
+              className="space-y-8"
+            >
               {primarySkills.map((skill) => (
-                <div key={skill.name} className="flex items-start gap-4">
+                <motion.div
+                  key={skill.name}
+                  variants={staggerItem}
+                  className="flex items-start gap-4"
+                >
                   <TechIcon
                     name={skill.name}
                     iconKey={skill.iconKey}
@@ -108,7 +140,7 @@ export function Skills() {
                   />
                   <div className="min-w-0">
                     <p className="font-semibold text-white">{skill.name}</p>
-                    <ul className="mt-1.5 space-y-1">
+                    <ul className="mt-2 space-y-1">
                       {skill.notes.map((note, i) => (
                         <li
                           key={i}
@@ -120,21 +152,25 @@ export function Skills() {
                       ))}
                     </ul>
                   </div>
-                </div>
+                </motion.div>
               ))}
-            </div>
+            </motion.div>
 
-            {expanded && extraSkills.length > 0 && (
-              <div className="mt-8 flex flex-wrap gap-2">
+            {extraSkills.length > 0 && (
+              <StaggeredReveal
+                show={expanded}
+                className="mt-8 flex flex-wrap gap-2"
+              >
                 {extraSkills.map((skill) => (
-                  <span
+                  <motion.span
                     key={skill.name}
-                    className="rounded-full border border-primary-600 bg-primary-800/60 px-3 py-1.5 text-sm whitespace-nowrap text-primary-100"
+                    variants={staggerItem}
+                    className="rounded-full border border-primary-600 bg-primary-800/60 px-3 py-1 text-sm whitespace-nowrap text-primary-100"
                   >
                     {skill.name}
-                  </span>
+                  </motion.span>
                 ))}
-              </div>
+              </StaggeredReveal>
             )}
 
             {hasMore && (

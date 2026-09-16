@@ -27,7 +27,7 @@
   --primary-foreground: #ffffff;
 
   /* neutral tokens derived from the primary scale (never plain gray) */
-  --background: var(--primary-50);
+  --background: var(--primary-200);
   --foreground: var(--primary-900);
   --muted: var(--primary-600);
   --surface: #ffffff;
@@ -66,8 +66,8 @@
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
 
-  --font-sans: var(--font-geist-sans), "Apple SD Gothic Neo", "Malgun Gothic",
-    sans-serif;
+  --font-sans:
+    var(--font-geist-sans), "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
   --font-mono: var(--font-geist-mono);
   --font-serif: var(--font-serif-kr), serif;
 
@@ -82,6 +82,7 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans);
+  word-break: keep-all;
 }
 
 /* Hides the persistent desktop-style scrollbar; touch devices still show
@@ -104,4 +105,25 @@ body {
     transform: scale(1);
     opacity: 1;
   }
+}
+
+@keyframes typewriter-blink {
+  0%,
+  50% {
+    opacity: 1;
+  }
+  50.01%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.typewriter-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  margin-left: 4px;
+  vertical-align: text-bottom;
+  background: currentColor;
+  animation: typewriter-blink 0.9s step-end infinite;
 }

@@ -87,7 +87,7 @@ export function Contact() {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label htmlFor="name" className="mb-1.5 block text-sm text-muted">
+            <label htmlFor="name" className="mb-2 block text-sm text-muted">
               이름
             </label>
             <input
@@ -96,12 +96,12 @@ export function Contact() {
               type="text"
               required
               placeholder="이송미"
-              className="w-full rounded-lg border border-border bg-surface px-4 py-2.5 text-sm text-primary-700 placeholder:text-primary-600/70 focus:border-primary-500 focus:outline-none"
+              className="w-full rounded-lg border border-border bg-surface px-4 py-3 text-sm text-primary-700 placeholder:text-primary-600/70 focus:border-primary-500 focus:outline-none"
             />
           </div>
 
           <div>
-            <label htmlFor="email" className="mb-1.5 block text-sm text-muted">
+            <label htmlFor="email" className="mb-2 block text-sm text-muted">
               이메일
             </label>
             <input
@@ -110,14 +110,14 @@ export function Contact() {
               type="email"
               required
               placeholder="im.pine.dev@gmail.com"
-              className="w-full rounded-lg border border-border bg-surface px-4 py-2.5 text-sm text-primary-700 placeholder:text-primary-600/70 focus:border-primary-500 focus:outline-none"
+              className="w-full rounded-lg border border-border bg-surface px-4 py-3 text-sm text-primary-700 placeholder:text-primary-600/70 focus:border-primary-500 focus:outline-none"
             />
           </div>
 
           <div>
             <label
               htmlFor="message"
-              className="mb-1.5 block text-sm text-muted"
+              className="mb-2 block text-sm text-muted"
             >
               메시지
             </label>
@@ -126,7 +126,7 @@ export function Contact() {
               name="message"
               required
               rows={5}
-              className="w-full resize-none rounded-lg border border-border bg-surface px-4 py-2.5 text-sm text-primary-700 placeholder:text-primary-600/70 focus:border-primary-500 focus:outline-none"
+              className="w-full resize-none rounded-lg border border-border bg-surface px-4 py-3 text-sm text-primary-700 placeholder:text-primary-600/70 focus:border-primary-500 focus:outline-none"
             />
           </div>
 
