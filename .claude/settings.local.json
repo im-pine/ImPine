@@ -30,7 +30,9 @@
       "Read(//Users/pine/.cache/**)",
       "Bash(find ~/.npm/_npx -maxdepth 3 -iname \"playwright\" -type d 2>/dev/null)",
       "Read(//Users/pine/.npm/_npx/**)",
-      "Bash(lsof -ti:3000 -sTCP:LISTEN | xargs -r kill; rm -f /Users/pine/.npm/_npx/e41f203b7505f1fb/verify*.mjs; echo done)"
+      "Bash(lsof -ti:3000 -sTCP:LISTEN | xargs -r kill; rm -f /Users/pine/.npm/_npx/e41f203b7505f1fb/verify*.mjs; echo done)",
+      "Bash(disown)",
+      "Bash(timeout 40 bash -c 'until curl -sf http://localhost:3000 >/dev/null; do sleep 1; done')"
     ],
     "additionalDirectories": [
       "/Users/pine/.npm/_npx/e41f203b7505f1fb"

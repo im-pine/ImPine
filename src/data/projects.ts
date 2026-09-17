@@ -1,127 +1,347 @@
+export interface ProjectMeta {
+  period?: string;
+  role?: string;
+  teamSize?: string;
+  contribution?: number;
+  etc?: string[];
+}
+
+export function getMetaParts(meta?: ProjectMeta): string[] {
+  if (!meta) return [];
+  return [
+    meta.period,
+    meta.role,
+    meta.teamSize,
+    meta.contribution !== undefined
+      ? `기여도 ${meta.contribution}%`
+      : undefined,
+    ...(meta.etc ?? []),
+  ].filter((part): part is string => Boolean(part));
+}
+
+export function formatMetaLine(meta?: ProjectMeta): string {
+  return getMetaParts(meta).join(" · ");
+}
+
+export type TextSegment =
+  | { type: "bold"; contents: string }
+  | { type: "highlight"; contents: string };
+
+export type RichText = string | (string | TextSegment)[];
+
+// A field made of multiple RichText lines (e.g. a list of sentences), as
+// opposed to RichText itself which is always a single line.
+export type MultiRichText = RichText[];
+
+export interface ProjectCoreContribution {
+  subtitle: RichText;
+  task: MultiRichText;
+  solution: MultiRichText;
+  result: MultiRichText;
+}
+
 export interface Project {
   id: string;
-  title: string;
-  period?: string;
-  summary: string;
+  name: string;
+  headline: string;
+  meta?: ProjectMeta;
+  overview: string;
+  coreContribution?: ProjectCoreContribution;
+  contributions: MultiRichText;
   tech: string[];
-  achievements?: string[];
-  contribution?: string;
+  tags?: string[];
+  organization?: string;
   featured: boolean;
 }
 
 export const projects: Project[] = [
   {
-    id: "global-currency-exchange",
-    title: "글로벌 화폐 교환 플랫폼",
-    period: "2024.07.02 ~ 2025.03.07",
-    summary:
-      "B2B 복지포인트·이커머스 기반 글로벌 플랫폼의 Multi Tenant 전환 및 공통 Frontend 구조 구축",
-    tech: [
-      "React",
-      "Next.js",
-      "SWR",
-      "Recoil",
-      "Zod",
-      "Tailwind CSS",
-      "Mantine",
-      "next-intl",
-      "SSE",
-      "Docker",
-      "Jenkins",
-      "Figma",
-      "Jira",
-      "Git",
-      "Slack",
+    id: "wevrix-global-currency-platform",
+    name: "글로벌 화폐 교환 플랫폼",
+    headline: "Multi Tenant 구조로 신규 기업 추가 약 1주 → 1시간 이내 단축",
+    meta: {
+      period: "2024.07 ~ 2025.03",
+      role: "Frontend Main",
+      teamSize: "4인 (FE1·BE2·PM1)",
+      contribution: 40,
+      etc: ["FE 기준 90%"],
+    },
+    overview: "B2B 복지포인트 플랫폼의 사용자·입점업체·관리자 3종 웹 구축",
+    coreContribution: {
+      subtitle:
+        "도메인 기반 Multi Tenant와 Headless 컴포넌트로 기업별 UI 자동 전환",
+      task: [
+        [
+          "기업 계약마다 3종 웹의 PHP 코드를 통째로 복사해 사이트가 ",
+          { type: "bold", contents: "기업 수×3" },
+          "으로 늘어나는 구조.",
+        ],
+        [
+          "기업 1곳 추가에 통상 ",
+          { type: "bold", contents: "약 1주" },
+          " 소요.",
+        ],
+      ],
+      solution: [
+        [
+          { type: "bold", contents: "• 기업 식별: " },
+          "도메인 기준으로 기업별 Config 자동 적용",
+        ],
+        [
+          { type: "bold", contents: "• 디자인 시스템 구축: " },
+          "Tailwind CSS 기준으로 Mantine UI를 커스텀해 ",
+          { type: "bold", contents: "단일 디자인 시스템으로 통합" },
+        ],
+        [
+          { type: "bold", contents: "• 컴포넌트 설계: " },
+          "Headless 컴포넌트 패턴으로 로직과 UI를 분리해 ",
+          {
+            type: "bold",
+            contents: "Config에 따라 UI가 자동 전환되는 확장 구조",
+          },
+        ],
+      ],
+      result: [
+        [
+          "기업이 늘어도 ",
+          { type: "bold", contents: "웹별 단일 코드베이스 3개로 유지" },
+          ".",
+        ],
+        [
+          "기업 1곳 추가 시 소요시간 ",
+          { type: "highlight", contents: "약 1주 → 1시간 이내" },
+          " (Frontend 기준)",
+        ],
+      ],
+    },
+    contributions: [
+      [
+        { type: "bold", contents: "RBAC 권한 시스템: " },
+        "권한 데이터 등록만으로 메뉴·권한 설정 UI 자동 반영, Middleware로 페이지 진입 전 접근 차단",
+      ],
+      [
+        { type: "bold", contents: "온보딩 환경 구축: " },
+        "페이지 템플릿·온보딩 문서로 React 미경험 합류 FE 2명 3일 내 실무 투입",
+      ],
+      [
+        { type: "bold", contents: "실시간 알림: " },
+        "SSE 공통 Hook으로 재연결·중복 이벤트 방지 처리",
+      ],
+      [
+        { type: "bold", contents: "다국어: " },
+        "next-intl 기반 한국어·영어 지원",
+      ],
+      [
+        { type: "bold", contents: "오류 모니터링: " },
+        "오류 로깅과 Slack 자동 알림 연동",
+      ],
     ],
-    contribution: "Frontend Main / 4인 팀",
-    achievements: [
-      "Host 기반 기업 식별, Config·기업별 Style 적용을 통한 Multi Tenant 구조 구축",
-      "Tailwind Color Palette와 Mantine Custom Theme를 연결한 Design System 구축",
-      "Core와 UI Component를 분리해 기업별 디자인 변경에도 공통 비즈니스 로직 재사용",
-      "20개 이상의 CRUD 권한을 관리하는 RBAC 구조와 권한 설정 UI 자동화",
-      "iron-session·Recoil·Next.js Middleware 기반 Server·Client 권한 관리 및 선제적 접근 제어",
-      "SWR Focus Revalidation과 인증 상태 확인을 결합한 데이터 최신성·인증 운영 구조 구성",
-      "Frontend Tech Spec·README·Jira Automation 기반 개발 문서 및 온보딩 체계 구축",
-      "next-intl 기반 한국어·영어 다국어 구조 구축",
-      "SSE 기반 실시간 이벤트 수신·알림 공통 구조 구축",
-      "오류 Logging·Slack 자동 알림 기반 Troubleshooting 환경 구축",
-      "신규 기업 구축 시간 약 40시간 → 1시간 이내, 약 97.5% 감소",
-      "Frontend Sub 인수인계 약 1시간, 신규 개발자 약 3일 내 실무 참여",
-    ],
+    tech: ["React", "Next.js", "TypeScript", "Tailwind CSS", "Mantine UI"],
+    tags: ["Headless 컴포넌트", "Design System", "RBAC"],
+    organization: "위브릭스",
     featured: true,
   },
   {
-    id: "coin-shopping-mall-mvp",
-    title: "코인 기반 쇼핑몰 + 관리자 MVP",
-    period: "2025.04.16 ~ 2025.05.12",
-    summary: "기존 지갑 자산과 연동해 코인 결제가 가능한 쇼핑몰·관리자 MVP",
-    tech: ["React", "Next.js", "TypeScript", "Tailwind CSS", "Docker", "Git", "Cursor"],
-    contribution: "Main Developer / 2인 팀 / 기여도 약 90%",
-    achievements: [
-      "사내에 준비되어 있던 이커머스 제작용 AI Prompt와 초기 코드 베이스를 활용해 회사 요구사항에 맞게 수정·확장",
-      "상품·장바구니·주문·결제·배송·관리자 Flow 구현",
-      "기존 지갑 정보와 쇼핑 API를 연결한 코인 구매 Flow 구현",
-      "MVP 12일 내 구축, 이후 4일간 Refactoring",
+    id: "teampleback-jajakjajak",
+    name: "자작자작",
+    headline: "온라인 문집 제작 기능으로 신규 수익원 창출",
+    meta: {
+      period: "2020.08 ~ 2022.12",
+      role: "Full Stack Developer (Frontend 중심)",
+      teamSize: "3~5인",
+    },
+    overview:
+      "학생 글쓰기·교사 관리·문집 제작을 연결한 온라인 글쓰기 교육 플랫폼",
+    coreContribution: {
+      subtitle:
+        "목차형 편집 UI와 양방향 데이터 동기화로 Server-Driven UI 데이터 가공",
+      task: [
+        [
+          { type: "bold", contents: "온라인 문집 제작 서비스" },
+          "를 위해, ",
+          { type: "bold", contents: "3중 Depth 글 데이터" },
+          "를 문집 에디터용 ",
+          { type: "bold", contents: "Server-Driven UI 형식" },
+          "으로 가공 필요",
+        ],
+      ],
+      solution: [
+        [
+          { type: "bold", contents: "• 사용자 편의성 설계: " },
+          "데이터 선택과 정렬을 좌우로 나눈 2열 구조로, 순서 변경 기능을 통해 ",
+          {
+            type: "bold",
+            contents: "책 목차처럼 직관적",
+          },
+          "인 문집 구성",
+        ],
+        [
+          { type: "bold", contents: "• 데이터 가공: " },
+          "정렬 순서를 유지한 채 글·글감 ",
+          {
+            type: "bold",
+            contents: "추가·삭제를 좌우 양방향 동기화",
+          },
+          ".",
+        ],
+        [
+          "글 선택 시 상위 글감 자동 포함 등 ",
+          { type: "bold", contents: "상하위 연동 반영" },
+          ". Server-Driven UI 형태로 데이터 변환",
+        ],
+        [
+          { type: "bold", contents: "• PDF 생성: " },
+          "에디터 편집 데이터를 디자인별 문집 템플릿에 적용해 ",
+          { type: "bold", contents: "인쇄용 PDF 문집 생성" },
+        ],
+      ],
+      result: [
+        [
+          "해당 기능으로 ",
+          { type: "bold", contents: "문집 제작 사례가 발생" },
+          "하며 ",
+          { type: "highlight", contents: "신규 수익원 창출" },
+        ],
+      ],
+    },
+    contributions: [
+      [
+        { type: "bold", contents: "계정 연동 가입: " },
+        "아이톡톡·웨일 계정 유형별 가입 흐름을 Redux로 관리해 계정 생성과 학급 참여를 한 흐름으로 연결",
+      ],
+      [
+        { type: "bold", contents: "온라인 강의 판매: " },
+        "강의 상세·구매 흐름 구현, 운영 강의 3개 중 2개 완판",
+      ],
+      [
+        { type: "bold", contents: "글쓰기 조건 자동 검증: " },
+        "글자 수·필수 단어 포함 여부 자동 판정",
+      ],
+      [
+        { type: "bold", contents: "검색 노출·분석: " },
+        "Metadata·Sitemap 설정, 네이버 서치어드바이저·Google Analytics 연동",
+      ],
+      [
+        { type: "bold", contents: "Word Cloud: " },
+        "학생 글의 주요 단어 시각화",
+      ],
     ],
+    tech: ["React", "Next.js", "TypeScript", "Redux", "Laravel", "MySQL"],
+    tags: ["Full Stack", "Server-Driven UI", "PDF 생성"],
+    organization: "팀플백",
     featured: true,
   },
   {
-    id: "jajakjajak",
-    title: "자작자작",
-    period: "2020.08 ~ 2022.12",
-    summary:
-      "학생 글쓰기·교사 관리·과제·문집 제작을 하나의 흐름으로 연결한 온라인 글쓰기 교육 플랫폼",
+    id: "wevrix-global-currency-shop-poc",
+    name: "글로벌 화폐 결제 쇼핑몰 PoC",
+    headline: "화폐 사용처 확장 쇼핑몰 PoC, AI 활용 영업일 12일 구축",
+    meta: {
+      period: "2025.04 ~ 2025.05",
+      role: "Main Developer",
+      teamSize: "2인 (Main · Backend Sub)",
+      contribution: 85,
+    },
+    overview: "글로벌 화폐 교환 플랫폼의 화폐로 결제하는 쇼핑몰·관리자 PoC",
+    coreContribution: {
+      subtitle: "AI 생성·직접 수정 병행으로 기존 플랫폼 연동 커머스 구현",
+      task: [
+        [
+          "기업 복지몰에 한정된 ",
+          {
+            type: "bold",
+            contents: "플랫폼 화폐의 사용처를 쇼핑몰로 확장",
+          },
+          "하기 위해, AI 활용 시 ",
+          {
+            type: "bold",
+            contents: "개발 소요 기간을 확인해 사업화 가능성 판단",
+          },
+          " 필요",
+        ],
+      ],
+      solution: [
+        [
+          { type: "bold", contents: "• 코드베이스 활용: " },
+          "AI 강의 자료의 프롬프트로 ",
+          { type: "bold", contents: "쇼핑몰·관리자 뼈대 생성" },
+        ],
+        [
+          { type: "bold", contents: "• 기존 플랫폼 연동: " },
+          "글로벌 화폐 교환 플랫폼의 ",
+          { type: "bold", contents: "계정 로그인·화폐 결제 구현" },
+          ", Prisma·PostgreSQL로 쇼핑몰 DB 구축",
+        ],
+        [
+          { type: "bold", contents: "• AI 활용: " },
+          "페이지 구조·디자인 틀 등 ",
+          { type: "bold", contents: "큰 범위 변경은 AI" },
+          "로 빠르게 처리하고, 버그·디자인 디테일은 ",
+          {
+            type: "bold",
+            contents: "직접 수정",
+          },
+        ],
+      ],
+      result: [
+        [
+          { type: "highlight", contents: "영업일 12일 구축" },
+          "으로 ",
+          { type: "bold", contents: "단기 사업화 가능성 확인" },
+        ],
+      ],
+    },
+    contributions: [],
     tech: [
-      "React",
       "Next.js",
-      "Redux",
       "TypeScript",
-      "JavaScript",
-      "PHP",
-      "Laravel",
-      "MySQL",
-      "Docker",
+      "Prisma",
+      "PostgreSQL",
+      "Tailwind CSS",
+      "Cursor",
     ],
-    contribution: "Full Stack Developer / Frontend 중심 / 3~5인 팀",
-    achievements: [
-      "학생 글쓰기·교사 학생 관리·과제 제출·어휘·문집 기능의 화면과 API·데이터 처리 영역 개발",
-      "학급 > 글감 > 글의 3중 Depth 데이터를 Drag & Drop으로 선별·정렬하고 Server-Driven UI 형식으로 전처리하는 Flow 구현",
-      "react-pdf-html 기반 HTML Template PDF 문집 생성 구조 구축",
-      "아이톡톡·웨일 계정 연동 및 학급 초대 가입 Flow 구축",
-      "최소 글자 수·필수 단어 포함 여부 등 글쓰기 조건 자동 검증 기능 구현",
-      "Metadata·Open Graph·Sitemap·robots·네이버 서치어드바이저·Google Analytics 기반 검색 노출 및 분석 환경 구축",
-      "온라인 글쓰기 강의 판매 영역 및 Word Cloud 기반 글쓰기 데이터 시각화 기능 구현",
-      "전국 학교·기관에서 개별 개설된 4,000+ 학급에서 서비스 활용",
-      "삼성 스마트 스쿨 사업 MOU 체결 및 교육 콘텐츠 공급",
-      "경남 아이톡톡 MOU 체결 및 경남 초등학교에서 활용 가능한 서비스 배포",
-      "대구미래교육원 MOU 체결",
-      "온라인 문집·교육 콘텐츠 판매 채널을 통한 추가 매출 발생",
-    ],
+    tags: ["Cursor", "플랫폼 연동", "Full Stack"],
+    organization: "위브릭스",
     featured: true,
   },
   {
     id: "cs-back-office",
-    title: "사내 CS 운영 Back Office",
-    period: "2024.02.12 ~ 2024.04.29",
-    summary:
+    name: "사내 CS 운영 Back Office",
+    headline:
       "개발팀을 거치던 반복 CS 업무를 비개발 운영 인력이 직접 처리할 수 있도록 만든 사내 운영 도구",
-    tech: ["React", "Next.js", "JavaScript", "Tailwind CSS", "SWR", "ContentLayer", "Docker", "Git"],
-    contribution: "Frontend Main / Frontend 1, Backend 1 / 기여도 약 50%",
-    achievements: [
+    meta: {
+      period: "2024.02.12 ~ 2024.04.29",
+      etc: ["Frontend Main / Frontend 1, Backend 1 / 기여도 약 50%"],
+    },
+    overview: "",
+    tech: [
+      "React",
+      "Next.js",
+      "JavaScript",
+      "Tailwind CSS",
+      "SWR",
+      "ContentLayer",
+      "Docker",
+      "Git",
+    ],
+    contributions: [
       "회원·OTP·블랙리스트·거래내역 조회 및 관리 기능 구축",
       "CS팀이 반복 운영 업무를 직접 처리할 수 있는 Dashboard 구축",
       "ContentLayer 기반 웹 운영 가이드 제공으로 비개발자의 자가 처리 기반 마련",
     ],
-    featured: true,
+    featured: false,
   },
   {
     id: "datacore-medical-dashboard",
-    title: "DataCore 의료 대시보드",
-    period: "2023.12.13 ~ 2023.12.27",
-    summary: "교수 연구 및 논문 발표를 위한 병실·환자 위험도 모니터링 Dashboard",
+    name: "DataCore 의료 대시보드",
+    headline:
+      "교수 연구 및 논문 발표를 위한 병실·환자 위험도 모니터링 Dashboard",
+    meta: {
+      period: "2023.12.13 ~ 2023.12.27",
+      etc: ["Frontend Main / 4인 팀 / 기여도 약 35%"],
+    },
+    overview: "",
     tech: ["React", "Next.js", "JavaScript", "Docker", "Git"],
-    contribution: "Frontend Main / 4인 팀 / 기여도 약 35%",
-    achievements: [
+    contributions: [
       "병원 → 병실 → 환자 계층 구조 기반 위험 병실 표시, 알림음, 최근 업데이트 상태, 위험도 조회 기능 구현",
       "예상 약 12일 규모의 작업을 약 10영업일 내 마무리",
     ],
@@ -129,11 +349,14 @@ export const projects: Project[] = [
   },
   {
     id: "jajakjajak-class",
-    title: "자작자작 클래스",
-    summary: "온라인 글쓰기 교육 콘텐츠 판매·수강 영역",
+    name: "자작자작 클래스",
+    headline: "온라인 글쓰기 교육 콘텐츠 판매·수강 영역",
+    meta: {
+      etc: ["Full Stack / Frontend 중심"],
+    },
+    overview: "",
     tech: [],
-    contribution: "Full Stack / Frontend 중심",
-    achievements: [
+    contributions: [
       "강의 상품 정보, 상세 페이지, 구매 Flow 등 온라인 강의 판매 기능 구현",
       "운영된 3개 강의 중 2개 강의 완판",
     ],
@@ -141,11 +364,14 @@ export const projects: Project[] = [
   },
   {
     id: "chappy",
-    title: "챕피",
-    summary: "교사-학생 질문·답변·피드백 Workflow를 연결한 교육 서비스 MVP",
+    name: "챕피",
+    headline: "교사-학생 질문·답변·피드백 Workflow를 연결한 교육 서비스 MVP",
+    meta: {
+      etc: ["Frontend Developer"],
+    },
+    overview: "",
     tech: [],
-    contribution: "Frontend Developer",
-    achievements: [
+    contributions: [
       "자주 사용하는 피드백 문구를 말풍선 형태로 선택해 입력할 수 있는 UI 구현으로 반복 입력 부담 감소",
       "신용보증기금 퍼스트펭귄 선정 프로젝트",
     ],
@@ -153,12 +379,15 @@ export const projects: Project[] = [
   },
   {
     id: "maeum-sildarae",
-    title: "마음실타래",
-    period: "2020.11 ~ 2020.12",
-    summary: "논문 기반 감정분석 다이어리 대학교 졸업작품",
+    name: "마음실타래",
+    headline: "논문 기반 감정분석 다이어리 대학교 졸업작품",
+    meta: {
+      period: "2020.11 ~ 2020.12",
+      etc: ["Frontend Developer / 2인 팀"],
+    },
+    overview: "",
     tech: ["React", "Redux", "JavaScript"],
-    contribution: "Frontend Developer / 2인 팀",
-    achievements: [
+    contributions: [
       "감정 분석 결과 시각화, Word Cloud 기반 주요 단어 표현, 감정별 색상화 및 Calendar 시각화",
       "졸업작품 최우수상 수상",
     ],
@@ -166,12 +395,18 @@ export const projects: Project[] = [
   },
   {
     id: "devrel",
-    title: "DevRel",
-    period: "2022.12 ~ 2023.02",
-    summary: "기업 기술 블로그 통합 플랫폼 Side Project",
+    name: "DevRel",
+    headline: "기업 기술 블로그 통합 플랫폼 Side Project",
+    meta: {
+      period: "2022.12 ~ 2023.02",
+      etc: ["Frontend Developer"],
+    },
+    overview: "",
     tech: [],
-    contribution: "Frontend Developer",
-    achievements: ["사용자 웹·관리자 웹 Frontend 구현", "기존 화면을 7일 내 리디자인"],
+    contributions: [
+      "사용자 웹·관리자 웹 Frontend 구현",
+      "기존 화면을 7일 내 리디자인",
+    ],
     featured: false,
   },
 ];
