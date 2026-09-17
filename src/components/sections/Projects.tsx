@@ -60,16 +60,16 @@ export function Projects() {
               >
                 <div className="flex flex-wrap items-baseline justify-between gap-2">
                   <h4 className="font-medium text-primary-900">
-                    {project.title}
+                    {project.name}
                   </h4>
-                  {project.period && (
+                  {project.meta?.period && (
                     <span className="text-xs text-muted">
-                      {project.period}
+                      {project.meta.period}
                     </span>
                   )}
                 </div>
                 <p className="text-card-body mt-1 text-primary-700 sm:text-sm">
-                  {project.summary}
+                  {project.headline}
                 </p>
               </motion.div>
             ))}
