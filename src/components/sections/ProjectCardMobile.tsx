@@ -10,6 +10,7 @@ import { RichText } from "@/components/ui/RichText";
 import { Divider } from "@/components/ui/Divider";
 import { MultiRichTextShowMore } from "@/components/ui/MultiRichTextShowMore";
 import { AutoScrollText } from "@/components/ui/AutoScrollText";
+import { TechIcon, resolveTechIcon } from "@/components/ui/TechIcon";
 
 const MOBILE_SPIN_DEGREES = 75;
 
@@ -158,14 +159,12 @@ export function ProjectCardMobile({ project, isEven }: ProjectCardMobileProps) {
 
         {project.tech.length > 0 && (
           <div className="scrollbar-hidden flex gap-2 overflow-x-auto">
-            {project.tech.map((tech) => (
-              <span
-                key={tech}
-                className="shrink-0 rounded-full bg-primary-800 px-3 py-1 font-mono text-xs whitespace-nowrap text-white"
-              >
-                {tech}
-              </span>
-            ))}
+            {project.tech.map((tech) => {
+              const { iconKey, color } = resolveTechIcon(tech);
+              return (
+                <TechIcon key={tech} name={tech} iconKey={iconKey} color={color} size="sm" />
+              );
+            })}
           </div>
         )}
 

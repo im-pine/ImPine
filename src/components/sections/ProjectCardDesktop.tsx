@@ -9,6 +9,7 @@ import {
 import { RichText } from "@/components/ui/RichText";
 import { Divider } from "@/components/ui/Divider";
 import { MultiRichTextShowMore } from "@/components/ui/MultiRichTextShowMore";
+import { TechIcon, resolveTechIcon } from "@/components/ui/TechIcon";
 
 // Left cards drift in from the left while rotating clockwise into place;
 // right cards mirror that from the right, rotating counter-clockwise.
@@ -147,14 +148,12 @@ export function ProjectCardDesktop({
 
       {project.tech.length > 0 && (
         <div className="flex flex-wrap gap-2">
-          {project.tech.map((tech) => (
-            <span
-              key={tech}
-              className="rounded-full bg-primary-800 px-3 py-1 font-mono text-xs text-white"
-            >
-              {tech}
-            </span>
-          ))}
+          {project.tech.map((tech) => {
+            const { iconKey, color } = resolveTechIcon(tech);
+            return (
+              <TechIcon key={tech} name={tech} iconKey={iconKey} color={color} size="sm" />
+            );
+          })}
         </div>
       )}
 
