@@ -47,5 +47,8 @@ export const profile: Profile = {
   ],
   email: "im.pine.dev@gmail.com",
   photo: "/images/profile.png",
-  links: [],
+  links: [
+    { label: "GitHub", url: "https://github.com/im-pine" },
+    { label: "LinkedIn", url: "https://www.linkedin.com/in/im-pine" },
+  ],
 };
