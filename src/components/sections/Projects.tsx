@@ -6,6 +6,7 @@ import { projects } from "@/data/projects";
 import { SectionContainer } from "@/components/ui/SectionContainer";
 import { ShowMoreToggle } from "@/components/ui/ShowMoreToggle";
 import { StaggeredReveal, staggerItem } from "@/components/ui/StaggeredReveal";
+import { TechIcon, resolveTechIcon } from "@/components/ui/TechIcon";
 import { ProjectCardDesktop } from "@/components/sections/ProjectCardDesktop";
 import { ProjectCardMobile } from "@/components/sections/ProjectCardMobile";
 
@@ -42,16 +43,27 @@ export function Projects() {
         {featured.map((project, index) => {
           const isEven = index % 2 === 0;
           return isMobile ? (
-            <ProjectCardMobile key={project.id} project={project} isEven={isEven} />
+            <ProjectCardMobile
+              key={project.id}
+              project={project}
+              isEven={isEven}
+            />
           ) : (
-            <ProjectCardDesktop key={project.id} project={project} isEven={isEven} />
+            <ProjectCardDesktop
+              key={project.id}
+              project={project}
+              isEven={isEven}
+            />
           );
         })}
       </div>
 
       {others.length > 0 && (
         <div className="mt-20 sm:mt-28">
-          <StaggeredReveal show={expanded} className="mb-6 space-y-4">
+          <StaggeredReveal
+            show={expanded}
+            className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3"
+          >
             {others.map((project) => (
               <motion.div
                 key={project.id}
@@ -62,15 +74,31 @@ export function Projects() {
                   <h4 className="font-medium text-primary-900">
                     {project.name}
                   </h4>
-                  {project.meta?.period && (
+                  {project.organization && (
                     <span className="text-xs text-muted">
-                      {project.meta.period}
+                      {project.organization}
                     </span>
                   )}
                 </div>
                 <p className="text-card-body mt-1 text-primary-700 sm:text-sm">
-                  {project.headline}
+                  {project.overview}
                 </p>
+                {project.tech.length > 0 && (
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {project.tech.map((tech) => {
+                      const { iconKey, color } = resolveTechIcon(tech);
+                      return (
+                        <TechIcon
+                          key={tech}
+                          name={tech}
+                          iconKey={iconKey}
+                          color={color}
+                          size="sm"
+                        />
+                      );
+                    })}
+                  </div>
+                )}
               </motion.div>
             ))}
           </StaggeredReveal>
