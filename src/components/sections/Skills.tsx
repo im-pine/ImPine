@@ -11,7 +11,7 @@ import {
   staggerItem,
 } from "@/components/ui/StaggeredReveal";
 
-const VISIBLE_COUNT = 5;
+const VISIBLE_COUNT = 3;
 
 export function Skills() {
   const [activeLabel, setActiveLabel] = useState(skillGroups[0].label);
@@ -116,8 +116,9 @@ export function Skills() {
 
           <div className="min-h-[583px] min-w-0 flex-1">
             <p className="mb-6 text-lg font-semibold text-primary-100">
-              Skill Stack{" "}
-              <span className="text-secondary-400">@ {activeGroup.label}</span>
+              {activeGroup.label}
+              {/* Skill Stack{" "} */}
+              {/* <span className="text-secondary-400">@ </span> */}
             </p>
 
             <motion.div

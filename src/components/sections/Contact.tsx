@@ -1,7 +1,15 @@
 "use client";
 
+import { SiGithub } from "react-icons/si";
+import { FaLinkedin } from "react-icons/fa";
+import type { IconType } from "react-icons";
 import { profile } from "@/data/profile";
 import { SectionContainer } from "@/components/ui/SectionContainer";
+
+const LINK_ICONS: Record<string, IconType> = {
+  GitHub: SiGithub,
+  LinkedIn: FaLinkedin,
+};
 
 function MailIcon() {
   return (
@@ -65,24 +73,27 @@ export function Contact() {
             </div>
           </div>
 
-          {profile.links.map((link) => (
-            <div key={link.label} className="flex items-center gap-4">
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary-800 text-white">
-                <MailIcon />
-              </span>
-              <div>
-                <p className="font-mono text-xs text-muted">{link.label}</p>
-                <a
-                  href={link.url}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="text-primary-700 hover:text-primary"
-                >
-                  {link.url}
-                </a>
+          {profile.links.map((link) => {
+            const Icon = LINK_ICONS[link.label];
+            return (
+              <div key={link.label} className="flex items-center gap-4">
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary-800 text-white">
+                  {Icon ? <Icon className="h-5 w-5" /> : <MailIcon />}
+                </span>
+                <div>
+                  <p className="font-mono text-xs text-muted">{link.label}</p>
+                  <a
+                    href={link.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-primary-700 hover:text-primary"
+                  >
+                    {link.url}
+                  </a>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">

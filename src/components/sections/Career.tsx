@@ -5,6 +5,7 @@ import { motion } from "motion/react";
 import { career } from "@/data/career";
 import { SectionContainer } from "@/components/ui/SectionContainer";
 import { staggerContainer, staggerItem } from "@/components/ui/StaggeredReveal";
+import { AutoScrollText } from "../ui/AutoScrollText";
 
 // Fixed length for the traveling highlight, independent of how tall the
 // timeline track ends up being — it should always read as a short "comet"
@@ -16,7 +17,8 @@ export function Career() {
   const [trackHeight, setTrackHeight] = useState(0);
 
   useEffect(() => {
-    const updateHeight = () => setTrackHeight(trackRef.current?.offsetHeight ?? 0);
+    const updateHeight = () =>
+      setTrackHeight(trackRef.current?.offsetHeight ?? 0);
     updateHeight();
     window.addEventListener("resize", updateHeight);
     return () => window.removeEventListener("resize", updateHeight);
@@ -25,7 +27,12 @@ export function Career() {
   const travelDistance = Math.max(trackHeight - SEGMENT_HEIGHT, 0);
 
   return (
-    <SectionContainer id="career" eyebrow="Career" title="경력" className="bg-primary-50">
+    <SectionContainer
+      id="career"
+      eyebrow="Career"
+      title="경력"
+      className="bg-primary-50"
+    >
       <div className="relative">
         <div
           ref={trackRef}
@@ -81,8 +88,13 @@ export function Career() {
                 >
                   {entry.roles[0]}
                 </motion.h3>
-
-                <motion.ul variants={staggerContainer} className="mt-4 space-y-2">
+                <motion.p variants={staggerItem} className="text-xs text-muted">
+                  {entry.overview}
+                </motion.p>
+                <motion.ul
+                  variants={staggerContainer}
+                  className="mt-2 space-y-1"
+                >
                   {entry.achievements.map((achievement, index) => (
                     <motion.li
                       key={index}
@@ -95,15 +107,21 @@ export function Career() {
                   ))}
                 </motion.ul>
 
-                <motion.div variants={staggerItem} className="mt-4 flex flex-wrap gap-2">
-                  {entry.roles.map((role) => (
-                    <span
-                      key={role}
-                      className="rounded-full bg-primary-800 px-3 py-1 font-mono text-xs text-white"
-                    >
-                      {role}
-                    </span>
-                  ))}
+                <motion.div
+                  variants={staggerItem}
+                  className="mt-4 flex flex-wrap gap-2"
+                >
+                  {entry.roles.map(
+                    (role, index) =>
+                      index > 0 && (
+                        <span
+                          key={role}
+                          className="rounded-full bg-primary-800 px-3 py-1 font-mono text-xs text-white"
+                        >
+                          {role}
+                        </span>
+                      ),
+                  )}
                 </motion.div>
               </motion.div>
             </div>
