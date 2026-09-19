@@ -1,3 +1,8 @@
+"use client";
+
+import { useLayoutEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
+import { AnimatePresence, motion } from "motion/react";
 import {
   SiJavascript,
   SiTypescript,
@@ -114,28 +119,78 @@ interface TechIconProps {
 export function TechIcon({ name, iconKey, color, size = "md" }: TechIconProps) {
   const Icon = iconKey ? ICONS[iconKey] : undefined;
   const styles = SIZE_STYLES[size];
+  const triggerRef = useRef<HTMLSpanElement>(null);
+  // A single Pointer Events state covers both cases: for mouse, enter/leave
+  // fire on hover as usual; for touch (no real hover), enter fires on
+  // contact and leave/up fire on release, which already matches "visible
+  // only while held" — no separate hover vs. press state needed.
+  const [isVisible, setIsVisible] = useState(false);
+  const [coords, setCoords] = useState<{ top: number; left: number } | null>(null);
+
+  // The tooltip renders in a portal specifically so it isn't clipped by the
+  // horizontally-scrolling tech-icon row on mobile project cards: that row
+  // needs `overflow-x-auto` to scroll, but the CSS overflow spec then forces
+  // `overflow-y` to compute as `auto` too, clipping anything (like this
+  // tooltip popping up above its icon) that would otherwise render above the
+  // row's clipped bounds. A z-index can't fix that — overflow clipping
+  // happens regardless of stacking order — so the tooltip has to render
+  // outside that ancestor entirely.
+  useLayoutEffect(() => {
+    if (!isVisible) return;
+    const rect = triggerRef.current?.getBoundingClientRect();
+    if (rect) setCoords({ top: rect.top, left: rect.left + rect.width / 2 });
+  }, [isVisible]);
+
+  const hide = () => setIsVisible(false);
 
   return (
-    <span className="group relative inline-flex">
+    <>
       <span
-        className={`flex shrink-0 items-center justify-center rounded-full bg-primary-50 ring-primary-400 ${styles.badge}`}
+        ref={triggerRef}
+        className="relative inline-flex"
+        onPointerEnter={() => setIsVisible(true)}
+        onPointerLeave={hide}
+        onPointerUp={hide}
+        onPointerCancel={hide}
       >
-        {Icon ? (
-          <Icon size={styles.icon} color={color} />
-        ) : (
-          <span className={`font-bold text-primary-700 ${styles.initials}`}>
-            {name.slice(0, 2).toUpperCase()}
-          </span>
-        )}
+        <span
+          className={`flex shrink-0 items-center justify-center rounded-full bg-primary-50 ring-primary-400 ${styles.badge}`}
+        >
+          {Icon ? (
+            <Icon size={styles.icon} color={color} />
+          ) : (
+            <span className={`font-bold text-primary-700 ${styles.initials}`}>
+              {name.slice(0, 2).toUpperCase()}
+            </span>
+          )}
+        </span>
       </span>
 
-      <span
-        role="tooltip"
-        className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-2 -translate-x-1/2 rounded-md bg-primary-900 px-2 py-1 text-xs whitespace-nowrap text-white opacity-0 shadow-md transition-opacity duration-150 group-hover:opacity-100"
-      >
-        {name}
-        <span className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-primary-900" />
-      </span>
-    </span>
+      {typeof document !== "undefined" &&
+        createPortal(
+          <AnimatePresence>
+            {isVisible && coords && (
+              <motion.span
+                role="tooltip"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.15 }}
+                style={{
+                  position: "fixed",
+                  top: coords.top,
+                  left: coords.left,
+                  transform: "translate(-50%, calc(-100% - 8px))",
+                }}
+                className="pointer-events-none z-50 rounded-md bg-primary-900 px-2 py-1 text-xs whitespace-nowrap text-white shadow-md"
+              >
+                {name}
+                <span className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-primary-900" />
+              </motion.span>
+            )}
+          </AnimatePresence>,
+          document.body,
+        )}
+    </>
   );
 }
