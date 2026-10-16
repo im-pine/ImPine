@@ -158,7 +158,7 @@ export function ProjectCardMobile({ project, isEven }: ProjectCardMobileProps) {
         )}
 
         {project.tech.length > 0 && (
-          <div className="scrollbar-hidden flex gap-2 overflow-x-auto">
+          <div className="scrollbar-hidden flex gap-2 overflow-x-auto px-1 py-2">
             {project.tech.map((tech) => {
               const { iconKey, color } = resolveTechIcon(tech);
               return (
